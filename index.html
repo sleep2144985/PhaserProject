@@ -119,7 +119,7 @@
             var topPipeY = position-360; //上方管道的位置
             var bottomPipeY = position+gap; //下方管道的位置
 
-            if(this.resetPipe(topPipeY,bottomPipeY)) return; //如果有出了边界的管道，则重置他们，不再制造新的管道了,达到循环利用的目的
+//            if(this.resetPipe(topPipeY,bottomPipeY)) return; //如果有出了边界的管道，则重置他们，不再制造新的管道了,达到循环利用的目的
 
             var topPipe = game.add.sprite(game.width, topPipeY, 'pipe', 0, this.pipeGroup); //上方的管道
             var bottomPipe = game.add.sprite(game.width, bottomPipeY, 'pipe', 1, this.pipeGroup); //下方的管道
@@ -174,11 +174,10 @@
             var overpipe= game.physics.arcade.overlap(this.bird, this.pipeGroup, this.hitPipe, null, this); //检测与管道的碰撞
             if(overground||overpipe)
             {
+		  this.hasStarted = false;
+		  game.time.events.stop();
                   game.state.start('menu');
             }
-             if(this.bird.angle < 90) this.bird.angle += 2.5; //下降时鸟的头朝下的动画
-             this.pipeGroup.forEachExists(this.checkScore,this); //分数检测和更新
-             this.bird.angularVelocity = 0;
              if(this.bird.body.rotation>=-30&&this.bird.body.rotation<=90)
              {
                this.bird.body.angularVelocity = 100;
@@ -186,9 +185,11 @@
              else {
                  this.bird.body.angularVelocity = 0;
              }
+             this.pipeGroup.forEachExists(this.checkScore,this); //分数检测和更新
+             }
            }
          }
-      }
+      
 
 
       //把定义好的场景添加到游戏中
